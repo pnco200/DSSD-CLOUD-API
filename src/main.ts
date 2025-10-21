@@ -5,7 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Habilitar CORS
+  app.enableCors();
 
+  // 🔹 Configurar Swagger
   const config = new DocumentBuilder()
     .setTitle('API de Colaboraciones')
     .setDescription('Documentación de la API para proyectos y etapas')
@@ -19,11 +22,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  // CORS habilitado por si lo necesitás
-  app.enableCors();
+  // 🔹 Render asigna automáticamente un puerto dinámico (PORT)
+  const port = process.env.PORT || 3000;
+  const host = '0.0.0.0'; // obligatorio para Render
 
-  await app.listen(3000);
-  console.log('🚀 API corriendo en http://localhost:3000');
-  console.log('📘 Swagger: http://localhost:3000/api-docs');
+  await app.listen(port, host);
+
+  console.log(`🚀 API corriendo en http://${host}:${port}`);
+  console.log(`📘 Swagger: http://${host}:${port}/api-docs`);
 }
 bootstrap();
