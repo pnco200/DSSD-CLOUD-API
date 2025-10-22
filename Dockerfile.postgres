@@ -1,0 +1,14 @@
+FROM postgres:15
+
+# Instala tzdata y configura la zona horaria correctamente
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tzdata && \
+    ln -fs /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV TZ=America/Argentina/Buenos_Aires
+ENV PGTZ=America/Argentina/Buenos_Aires
+
+# Ejecuta PostgreSQL normalmente
+CMD ["postgres"]
