@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Proyecto } from './proyecto.entity';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
@@ -20,7 +20,7 @@ export class ProyectoService {
     const proyecto = this.proyectoRepository.create({
       ...createProyectoDto,
       ong_lider,
-    });
+    } as DeepPartial<Proyecto>);
     return this.proyectoRepository.save(proyecto);
   }
 
@@ -28,11 +28,11 @@ export class ProyectoService {
     return this.proyectoRepository.find({ relations: ['ong_lider', 'etapas'] });
   }
 
-  findOne(id: number): Promise<Proyecto> {
+  findOne(id: number): Promise<Proyecto | null> {
     return this.proyectoRepository.findOne({ where: { id }, relations: ['ong_lider', 'etapas'] });
   }
 
-  async update(id: number, updateProyectoDto: UpdateProyectoDto): Promise<Proyecto> {
+  async update(id: number, updateProyectoDto: UpdateProyectoDto): Promise<Proyecto | null> {
     await this.proyectoRepository.update(id, updateProyectoDto);
     return this.findOne(id);
   }
