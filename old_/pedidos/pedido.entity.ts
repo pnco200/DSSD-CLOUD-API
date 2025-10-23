@@ -1,4 +1,5 @@
 // pedidos/pedido.entity.ts
+/*
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Etapa } from '../etapas/etapa.entity';
 import { Usuario } from 'src/usuarios/usuario.entity';
@@ -55,5 +56,5 @@ export class Pedido {
   @JoinColumn({ name: 'comprometidoPorId' })
   comprometidoPor: Usuario;
 }
-
+*/
 

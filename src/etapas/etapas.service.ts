@@ -2,27 +2,48 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Etapa } from './etapa.entity';
+import { CreateEtapaDto } from './dto/create-etapa.dto';
+import { UpdateEtapaDto } from './dto/update-etapa.dto';
+import { Proyecto } from '../proyectos/proyecto.entity';
+import { Ong } from '../ongs/ong.entity';
 
 @Injectable()
 export class EtapasService {
   constructor(
     @InjectRepository(Etapa)
-    private readonly etapaRepo: Repository<Etapa>,
+    private readonly etapaRepository: Repository<Etapa>,
+    @InjectRepository(Proyecto)
+    private readonly proyectoRepository: Repository<Proyecto>,
+    @InjectRepository(Ong)
+    private readonly ongRepository: Repository<Ong>,
   ) {}
 
-  crear(etapaData: Partial<Etapa>) {
-    const etapa = this.etapaRepo.create(etapaData);
-    return this.etapaRepo.save(etapa);
+  async create(createEtapaDto: CreateEtapaDto): Promise<Etapa> {
+    const proyecto = await this.proyectoRepository.findOne({ where: { id: createEtapaDto.proyecto_id } });
+    const ong_ejecutora = await this.ongRepository.findOne({ where: { id: createEtapaDto.ong_ejecutora_id } });
+    const etapa = this.etapaRepository.create({
+      ...createEtapaDto,
+      proyecto,
+      ong_ejecutora,
+    });
+    const savedEtapa = await this.etapaRepository.save(etapa);
+    return savedEtapa;
   }
 
-  listarPorProyecto(proyectoId: number) {
-    return this.etapaRepo.find({ where: { proyectoId } });
+  findAll(): Promise<Etapa[]> {
+    return this.etapaRepository.find({ relations: ['proyecto', 'ong_ejecutora'] });
   }
 
-  async actualizarEstado(id: number, nuevoEstado: string) {
-    const etapa = await this.etapaRepo.findOne({ where: { id } });
-    if (!etapa) throw new Error('Etapa no encontrada');
-    etapa.estado = nuevoEstado;
-    return this.etapaRepo.save(etapa);
+  findOne(id: number): Promise<Etapa> {
+    return this.etapaRepository.findOne({ where: { id }, relations: ['proyecto', 'ong_ejecutora'] });
+  }
+
+  async update(id: number, updateEtapaDto: UpdateEtapaDto): Promise<Etapa> {
+    await this.etapaRepository.update(id, updateEtapaDto);
+    return this.findOne(id);
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.etapaRepository.delete(id);
   }
 }

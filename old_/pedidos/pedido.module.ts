@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+/*import { Module } from '@nestjs/common';
 import { PedidosService } from './pedido.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Pedido } from './pedido.entity';
@@ -14,3 +14,4 @@ import { PedidosController } from './pedido.controller';
   exports: [PedidosService],
 })
 export class PedidoModule {}
+*/

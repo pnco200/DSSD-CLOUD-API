@@ -1,20 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Proyecto } from '../proyectos/proyecto.entity';
+import { Ong } from '../ongs/ong.entity';
 
 @Entity('etapas')
 export class Etapa {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  id_externa: string;
+
   @Column()
   nombre: string;
 
-  @Column()
+  @Column('text')
   descripcion: string;
 
-  @Column()
-  proyectoId: number;
+  @Column({ default: false })
+  is_completed: boolean;
 
-  @Column({ default: 'pendiente' })
-  estado: string;
-    pedidos: any;
+  @ManyToOne(() => Ong, { eager: true })
+  ong_ejecutora: Ong;
+
+  @ManyToOne(() => Proyecto, proyecto => proyecto.etapas)
+  proyecto: Proyecto;
 }
