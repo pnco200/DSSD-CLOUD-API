@@ -37,7 +37,13 @@ export class EtapasController {
   update(@Param('id') id: string, @Body() updateEtapaDto: UpdateEtapaDto) {
     return this.etapasService.update(+id, updateEtapaDto);
   }
-
+  
+  @Patch(':id/complete')
+  @ApiOperation({ summary: 'Marcar etapa como completada' })
+  @ApiResponse({ status: 200, description: 'La etapa fue marcada como completada exitosamente!', type: Etapa })
+  markAsCompleted(@Param('id') id: string) {
+    return this.etapasService.markAsCompleted(+id);
+  }
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an etapa' })
   @ApiResponse({ status: 204, description: 'The etapa has been successfully deleted.' })

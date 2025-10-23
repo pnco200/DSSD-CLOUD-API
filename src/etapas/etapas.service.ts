@@ -47,4 +47,16 @@ export class EtapasService {
   async remove(id: number): Promise<void> {
     await this.etapaRepository.delete(id);
   }
+
+ async markAsCompleted(id: number): Promise<Etapa> {
+      const etapa = await this.etapaRepository.findOne({ where: { id } });
+      
+      if (!etapa) {
+        throw new Error(`Etapa with id ${id} not found`);
+      }
+      
+      etapa.is_completed = true;
+      return await this.etapaRepository.save(etapa);
+  }
+  
 }
