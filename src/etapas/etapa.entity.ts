@@ -16,4 +16,5 @@ export class Etapa {
 
   @Column({ default: 'pendiente' })
   estado: string;
+    pedidos: any;
 }
