@@ -12,8 +12,8 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, description: 'The user has been successfully created.', type: Usuario })
+  @ApiOperation({ summary: 'Crear un nuevo usuario'  })
+  @ApiResponse({ status: 201, description: 'El usuario ha sido creado exitosamente.', type: Usuario })
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuariosService.create(createUsuarioDto);
   }
@@ -21,8 +21,8 @@ export class UsuariosController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Return all users.', type: [Usuario] })
+  @ApiOperation({ summary: 'Obtener todos los usuarios' })
+  @ApiResponse({ status: 200, description: 'Lista de todos los usuarios obtenida exitosamente.', type: [Usuario] })
   findAll() {
     return this.usuariosService.findAll();
   }
@@ -30,8 +30,8 @@ export class UsuariosController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get(':id')
-  @ApiOperation({ summary: 'Get a user by ID' })
-  @ApiResponse({ status: 200, description: 'Return the user.', type: Usuario })
+  @ApiOperation({ summary: 'Obtener un usuario por ID' })
+  @ApiResponse({ status: 200, description: 'Usuario encontrado exitosamente.', type: Usuario })
   findOne(@Param('id') id: string) {
     return this.usuariosService.findOne(+id);
   }
@@ -39,8 +39,8 @@ export class UsuariosController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Patch(':id')
-  @ApiOperation({ summary: 'Update a user' })
-  @ApiResponse({ status: 200, description: 'The user has been successfully updated.', type: Usuario })
+  @ApiOperation({ summary: 'Actualizar un usuario' })
+  @ApiResponse({ status: 200, description: 'El usuario ha sido actualizado exitosamente.', type: Usuario })
   update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
     return this.usuariosService.update(+id, updateUsuarioDto);
   }
@@ -48,8 +48,8 @@ export class UsuariosController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a user' })
-  @ApiResponse({ status: 204, description: 'The user has been successfully deleted.' })
+  @ApiOperation({ summary: 'Eliminar un usuario' })
+  @ApiResponse({ status: 204, description: 'El usuario ha sido eliminado exitosamente.' })
   remove(@Param('id') id: string) {
     return this.usuariosService.remove(+id);
   }

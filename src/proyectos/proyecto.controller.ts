@@ -11,36 +11,36 @@ export class ProyectoController {
   constructor(private readonly proyectoService: ProyectoService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new project' })
-  @ApiResponse({ status: 201, description: 'The project has been successfully created.', type: Proyecto })
+  @ApiOperation({ summary: 'Crear un nuevo proyecto' })
+  @ApiResponse({ status: 201, description: 'El proyecto ha sido creado exitosamente.', type: Proyecto })
   create(@Body() createProyectoDto: CreateProyectoDto) {
     return this.proyectoService.create(createProyectoDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all projects' })
-  @ApiResponse({ status: 200, description: 'Return all projects.', type: [Proyecto] })
+  @ApiOperation({ summary: 'Obtener todos los proyectos' })
+  @ApiResponse({ status: 200, description: 'Lista de todos los proyectos obtenida exitosamente.', type: [Proyecto] })
   findAll() {
     return this.proyectoService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get a project by ID' })
-  @ApiResponse({ status: 200, description: 'Return the project.', type: Proyecto })
+  @ApiOperation({ summary: 'Obtener un proyecto por ID' })
+  @ApiResponse({ status: 200, description: 'Proyecto encontrado exitosamente.', type: Proyecto })
   findOne(@Param('id') id: string) {
     return this.proyectoService.findOne(+id);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update a project' })
-  @ApiResponse({ status: 200, description: 'The project has been successfully updated.', type: Proyecto })
+  @ApiOperation({ summary: 'Actualizar un proyecto' })
+  @ApiResponse({ status: 200, description: 'El proyecto ha sido actualizado exitosamente.', type: Proyecto })
   update(@Param('id') id: string, @Body() updateProyectoDto: UpdateProyectoDto) {
     return this.proyectoService.update(+id, updateProyectoDto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a project' })
-  @ApiResponse({ status: 204, description: 'The project has been successfully deleted.' })
+  @ApiOperation({ summary: 'Eliminar un proyecto' })
+  @ApiResponse({ status: 204, description: 'El proyecto ha sido eliminado exitosamente.' })
   remove(@Param('id') id: string) {
     return this.proyectoService.remove(+id);
   }

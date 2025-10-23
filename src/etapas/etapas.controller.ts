@@ -11,29 +11,29 @@ export class EtapasController {
   constructor(private readonly etapasService: EtapasService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new etapa' })
-  @ApiResponse({ status: 201, description: 'The etapa has been successfully created.', type: Etapa })
+  @ApiOperation({ summary: 'Crear una nueva etapa' })
+  @ApiResponse({ status: 201, description: 'La etapa fue creada exitosamente', type: Etapa })
   create(@Body() createEtapaDto: CreateEtapaDto) {
     return this.etapasService.create(createEtapaDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all etapas' })
-  @ApiResponse({ status: 200, description: 'Return all etapas.', type: [Etapa] })
+  @ApiOperation({ summary: 'Obtener todas las etapas' })
+  @ApiResponse({ status: 200, description: 'Lista de todas las etapas obtenida exitosamente.', type: [Etapa] })
   findAll() {
     return this.etapasService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get an etapa by ID' })
-  @ApiResponse({ status: 200, description: 'Return the etapa.', type: Etapa })
+  @ApiOperation({ summary: 'Obtener etapa por ID' })
+  @ApiResponse({ status: 200, description: 'Etapa encontrada exitosamente.', type: Etapa })
   findOne(@Param('id') id: string) {
     return this.etapasService.findOne(+id);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update an etapa' })
-  @ApiResponse({ status: 200, description: 'The etapa has been successfully updated.', type: Etapa })
+  @ApiOperation({ summary: 'Actualizar etapa' })
+  @ApiResponse({ status: 200, description: 'La etapa fue actualizada exitosamente.', type: Etapa })
   update(@Param('id') id: string, @Body() updateEtapaDto: UpdateEtapaDto) {
     return this.etapasService.update(+id, updateEtapaDto);
   }
@@ -45,8 +45,8 @@ export class EtapasController {
     return this.etapasService.markAsCompleted(+id);
   }
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete an etapa' })
-  @ApiResponse({ status: 204, description: 'The etapa has been successfully deleted.' })
+  @ApiOperation({ summary: 'Eliminar etapa' })
+  @ApiResponse({ status: 204, description: 'La etapa fue eliminada exitosamente' })
   remove(@Param('id') id: string) {
     return this.etapasService.remove(+id);
   }
