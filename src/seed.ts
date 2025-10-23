@@ -31,10 +31,11 @@ async function seed() {
   const etapaRepo = AppDataSource.getRepository(Etapa);
 
   // Clear existing data
-  await etapaRepo.clear();
-  await proyectoRepo.clear();
-  await ongRepo.clear();
-  await usuarioRepo.clear();
+// Clear existing data safely
+await AppDataSource.query(`
+  TRUNCATE TABLE "etapas", "proyectos", "ongs", "usuarios"
+  RESTART IDENTITY CASCADE
+`);
 
   // Seed Usuarios
   const passwordHash = await bcrypt.hash('password123', 10);
