@@ -39,11 +39,11 @@ export class CreateEtapaDto {
   @IsOptional()
   is_completed: boolean;
 
-  @ApiProperty({ description: 'ID de la ONG ejecutora', example: 1 })
+  /*@ApiProperty({ description: 'ID de la ONG ejecutora', example: 1 })
   @IsNumber()
   @IsNotEmpty()
   ong_ejecutora_id: number;
-
+  */
   @ApiProperty({ description: 'ID del proyecto al que pertenece', example: 1 })
   @IsNumber()
   @IsNotEmpty()

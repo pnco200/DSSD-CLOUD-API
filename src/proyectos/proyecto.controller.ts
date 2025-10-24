@@ -4,6 +4,7 @@ import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Proyecto } from './proyecto.entity';
+import { Etapa } from '../etapas/etapa.entity';
 
 @ApiTags('proyectos')
 @Controller('proyectos')
@@ -43,5 +44,12 @@ export class ProyectoController {
   @ApiResponse({ status: 204, description: 'El proyecto ha sido eliminado exitosamente.' })
   remove(@Param('id') id: string) {
     return this.proyectoService.remove(+id);
+  }
+
+  @Get(':id/etapas')
+  @ApiOperation({ summary: 'Obtener todas las etapas de un proyecto' })
+  @ApiResponse({ status: 200, description: 'Lista de etapas del proyecto obtenida exitosamente.', type: [Etapa] })
+  findEtapas(@Param('id') id: string) {
+    return this.proyectoService.findEtapas(+id);
   }
 }

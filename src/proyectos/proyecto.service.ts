@@ -5,6 +5,7 @@ import { Proyecto } from './proyecto.entity';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
 import { Ong } from '../ongs/ong.entity';
+import { Etapa } from '../etapas/etapa.entity';
 
 @Injectable()
 export class ProyectoService {
@@ -39,5 +40,10 @@ export class ProyectoService {
 
   async remove(id: number): Promise<void> {
     await this.proyectoRepository.delete(id);
+  }
+
+  async findEtapas(id: number): Promise<Etapa[]> {
+    const proyecto = await this.proyectoRepository.findOne({ where: { id }, relations: ['etapas'] });
+    return proyecto?.etapas ?? [];
   }
 }

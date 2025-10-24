@@ -4,6 +4,7 @@ import { CreateEtapaDto } from './dto/create-etapa.dto';
 import { UpdateEtapaDto } from './dto/update-etapa.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Etapa } from './etapa.entity';
+import { CommitEtapaDto } from './dto/commit-etapa.dto';
 
 @ApiTags('etapas')
 @Controller('etapas')
@@ -43,6 +44,13 @@ export class EtapasController {
   @ApiResponse({ status: 200, description: 'La etapa fue marcada como completada exitosamente!', type: Etapa })
   markAsCompleted(@Param('id') id: string) {
     return this.etapasService.markAsCompleted(+id);
+  }
+
+  @Patch(':id/comprometer')
+  @ApiOperation({ summary: 'Comprometer una ONG para ejecutar la etapa' })
+  @ApiResponse({ status: 200, description: 'La ONG fue comprometida a la etapa exitosamente.', type: Etapa })
+  commitOng(@Param('id') id: string, @Body() body: CommitEtapaDto) {
+    return this.etapasService.commitOng(+id, body.ong_id);
   }
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar etapa' })

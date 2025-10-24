@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Etapa } from './etapa.entity';
@@ -21,11 +21,11 @@ export class EtapasService {
   
   async create(createEtapaDto: CreateEtapaDto): Promise<Etapa> {
     const proyecto = await this.proyectoRepository.findOne({ where: { id: createEtapaDto.proyecto_id } });
-    const ong_ejecutora = await this.ongRepository.findOne({ where: { id: createEtapaDto.ong_ejecutora_id } });
+    //const ong_ejecutora = await this.ongRepository.findOne({ where: { id: createEtapaDto.ong_ejecutora_id } });
     const etapa = this.etapaRepository.create({
       ...createEtapaDto,
       proyecto,
-      ong_ejecutora,
+      //ong_ejecutora,
     } as DeepPartial<Etapa>);
     const savedEtapa = await this.etapaRepository.save(etapa);
     return savedEtapa;
@@ -59,4 +59,22 @@ export class EtapasService {
       return await this.etapaRepository.save(etapa);
   }
   
+  async commitOng(etapaId: number, ongId: number): Promise<Etapa> {
+    const etapa = await this.etapaRepository.findOne({ where: { id: etapaId }, relations: ['ong_ejecutora'] });
+    if (!etapa) {
+      throw new NotFoundException(`Etapa con id ${etapaId} no encontrada`);
+    }
+
+    const ong = await this.ongRepository.findOne({ where: { id: ongId } });
+    if (!ong) {
+      throw new NotFoundException(`ONG con id ${ongId} no encontrada`);
+    }
+
+    if (etapa.ong_ejecutora && etapa.ong_ejecutora.id !== ong.id) {
+      throw new ConflictException('La etapa ya tiene una ONG ejecutora asignada');
+    }
+
+    etapa.ong_ejecutora = ong;
+    return this.etapaRepository.save(etapa);
+  }
 }
