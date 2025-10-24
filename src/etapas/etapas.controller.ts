@@ -1,22 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { EtapasService } from './etapas.service';
 import { CreateEtapaDto } from './dto/create-etapa.dto';
 import { UpdateEtapaDto } from './dto/update-etapa.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Etapa } from './etapa.entity';
-import { CommitEtapaDto } from './dto/commit-etapa.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('etapas')
 @Controller('etapas')
 export class EtapasController {
   constructor(private readonly etapasService: EtapasService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @Post()
   @ApiOperation({ summary: 'Crear una nueva etapa' })
   @ApiResponse({ status: 201, description: 'La etapa fue creada exitosamente', type: Etapa })
-  create(@Body() createEtapaDto: CreateEtapaDto) {
-    return this.etapasService.create(createEtapaDto);
+  create(@Body() createEtapaDto: CreateEtapaDto, @Request() req) {
+    return this.etapasService.create(createEtapaDto, req.user.ong_id);
   }
 
   @Get()
@@ -51,11 +52,13 @@ export class EtapasController {
     return this.etapasService.markAsCompleted(+id, userOngId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @Patch(':id/comprometer')
   @ApiOperation({ summary: 'Comprometer una ONG para ejecutar la etapa' })
   @ApiResponse({ status: 200, description: 'La ONG fue comprometida a la etapa exitosamente.', type: Etapa })
-  commitOng(@Param('id') id: string, @Body() body: CommitEtapaDto) {
-    return this.etapasService.commitOng(+id, body.ong_id);
+  commitOng(@Param('id') id: string, @Request() req) {
+    return this.etapasService.commitOng(+id, req.user.ong_id);
   }
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar etapa' })

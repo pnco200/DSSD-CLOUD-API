@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Etapa } from './etapa.entity';
@@ -19,19 +19,22 @@ export class EtapasService {
   ) {}
 
   
-  async create(createEtapaDto: CreateEtapaDto): Promise<Etapa> {
+  async create(createEtapaDto: CreateEtapaDto, requesterOngId?: number): Promise<Etapa> {
     if (createEtapaDto.proyecto_id === null || createEtapaDto.proyecto_id === undefined) {
       throw new BadRequestException('El campo proyecto_id es requerido');
     }
-    const proyecto = await this.proyectoRepository.findOne({ where: { id: createEtapaDto.proyecto_id } });
+    const proyecto = await this.proyectoRepository.findOne({ where: { id: createEtapaDto.proyecto_id }, relations: ['ong_lider'] });
     if (!proyecto) {
       throw new NotFoundException(`Proyecto con id ${createEtapaDto.proyecto_id} no encontrado`);
     }
-    //const ong_ejecutora = await this.ongRepository.findOne({ where: { id: createEtapaDto.ong_ejecutora_id } });
+    if (requesterOngId !== undefined && requesterOngId !== null) {
+      if (!proyecto.ong_lider || proyecto.ong_lider.id !== requesterOngId) {
+        throw new ForbiddenException('El usuario no pertenece a la ONG líder del proyecto');
+      }
+    }
     const etapa = this.etapaRepository.create({
       ...createEtapaDto,
       proyecto,
-      //ong_ejecutora,
     } as DeepPartial<Etapa>);
     const savedEtapa = await this.etapaRepository.save(etapa);
     return savedEtapa;
