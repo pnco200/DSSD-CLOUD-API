@@ -16,13 +16,10 @@ export class ProyectoService {
     private readonly ongRepository: Repository<Ong>,
   ) {}
 
-  async create(createProyectoDto: CreateProyectoDto): Promise<Proyecto> {
-    if (createProyectoDto.ong_lider_id === null || createProyectoDto.ong_lider_id === undefined) {
-      throw new BadRequestException('El campo ong_lider_id es requerido');
-    }
-    const ong_lider = await this.ongRepository.findOne({ where: { id: createProyectoDto.ong_lider_id } });
+  async create(createProyectoDto: CreateProyectoDto, ong_id: number): Promise<Proyecto> {
+    const ong_lider = await this.ongRepository.findOne({ where: { id: ong_id } });
     if (!ong_lider) {
-      throw new NotFoundException(`ONG con id ${createProyectoDto.ong_lider_id} no encontrada`);
+      throw new NotFoundException(`ONG con id ${ong_id} no encontrada`);
     }
     const proyecto = this.proyectoRepository.create({
       ...createProyectoDto,

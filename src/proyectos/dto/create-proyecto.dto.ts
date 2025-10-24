@@ -5,7 +5,6 @@ import {
   IsDateString,
   IsOptional,
   IsBoolean,
-  IsNumber,
 } from 'class-validator';
 
 export class CreateProyectoDto {
@@ -33,14 +32,6 @@ export class CreateProyectoDto {
   @IsString()
   @IsNotEmpty()
   descripcion: string;
-
-  @ApiProperty({
-    description: 'ID de la ONG líder del proyecto',
-    example: 1,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  ong_lider_id: number;
 
   @ApiProperty({
     description: 'Fecha de inicio del proyecto',

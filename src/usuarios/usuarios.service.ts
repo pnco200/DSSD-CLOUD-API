@@ -1,24 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import * as bcrypt from 'bcrypt';
+import { Ong } from '../ongs/ong.entity';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Ong)
+    private readonly ongRepository: Repository<Ong>,
   ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
+    const { ong_id, ...rest } = createUsuarioDto;
+    const ong = await this.ongRepository.findOne({ where: { id: ong_id } });
+    if (!ong) {
+      throw new NotFoundException(`ONG with ID ${ong_id} not found`);
+    }
+
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(createUsuarioDto.password, salt);
+    const hashedPassword = await bcrypt.hash(rest.password, salt);
     const newUser = this.usuarioRepository.create({
-      ...createUsuarioDto,
+      ...rest,
       password: hashedPassword,
+      ong: ong,
     });
     return this.usuarioRepository.save(newUser);
   }

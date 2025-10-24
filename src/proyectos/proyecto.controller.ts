@@ -1,21 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { ProyectoService } from './proyecto.service';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Proyecto } from './proyecto.entity';
 import { Etapa } from '../etapas/etapa.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('proyectos')
 @Controller('proyectos')
 export class ProyectoController {
-  constructor(private readonly proyectoService: ProyectoService) {}
+  constructor(private readonly proyectoService: ProyectoService) { }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Crear un nuevo proyecto' })
   @ApiResponse({ status: 201, description: 'El proyecto ha sido creado exitosamente.', type: Proyecto })
-  create(@Body() createProyectoDto: CreateProyectoDto) {
-    return this.proyectoService.create(createProyectoDto);
+  create(@Body() createProyectoDto: CreateProyectoDto, @Request() req) {
+    return this.proyectoService.create(createProyectoDto, req.user.ong_id);
   }
 
   @Get()

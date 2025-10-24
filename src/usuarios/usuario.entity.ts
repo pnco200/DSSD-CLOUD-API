@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Ong } from '../ongs/ong.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -13,4 +14,8 @@ export class Usuario {
 
   @Column({ default: 'user' })
   rol: string;
+
+  @ManyToOne(() => Ong, { eager: true })
+  @JoinColumn({ name: 'ong_id' })
+  ong: Ong;
 }
