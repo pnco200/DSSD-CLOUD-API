@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request  } from '@nestjs/common';
 import { EtapasService } from './etapas.service';
 import { CreateEtapaDto } from './dto/create-etapa.dto';
 import { UpdateEtapaDto } from './dto/update-etapa.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Etapa } from './etapa.entity';
 import { CommitEtapaDto } from './dto/commit-etapa.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('etapas')
 @Controller('etapas')
@@ -40,10 +41,14 @@ export class EtapasController {
   }
   
   @Patch(':id/complete')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Marcar etapa como completada' })
+  @ApiBearerAuth('JWT-auth')
   @ApiResponse({ status: 200, description: 'La etapa fue marcada como completada exitosamente!', type: Etapa })
-  markAsCompleted(@Param('id') id: string) {
-    return this.etapasService.markAsCompleted(+id);
+  markAsCompleted(@Param('id') id: string, @Request() req) {
+    // Extraer ong_id del usuario autenticado del JWT
+    const userOngId = req.user.ong_id;
+    return this.etapasService.markAsCompleted(+id, userOngId);
   }
 
   @Patch(':id/comprometer')

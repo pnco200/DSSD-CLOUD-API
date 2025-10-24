@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Etapa } from './etapa.entity';
@@ -54,15 +54,30 @@ export class EtapasService {
     await this.etapaRepository.delete(id);
   }
 
- async markAsCompleted(id: number): Promise<Etapa> {
-      const etapa = await this.etapaRepository.findOne({ where: { id } });
-      
-      if (!etapa) {
-        throw new Error(`Etapa with id ${id} not found`);
-      }
-      
-      etapa.is_completed = true;
-      return await this.etapaRepository.save(etapa);
+ async markAsCompleted(id: number, userOngId: number): Promise<Etapa> {
+    const etapa = await this.etapaRepository.findOne({ 
+      where: { id },
+      relations: ['ong_ejecutora']
+    });
+  
+    if (!etapa) {
+      throw new NotFoundException(`Etapa con id ${id} no encontrada`);
+    }
+  
+    // Valida que la ONG del usuario sea la ONG ejecutora
+    if (etapa.ong_ejecutora.id !== userOngId) {
+      throw new UnauthorizedException(
+        'Solo la ONG ejecutora puede marcar esta etapa como completada'
+      );
+    }
+  
+    // Valida que no esté  completada
+    if (etapa.is_completed) {
+      throw new BadRequestException('La etapa ya está marcada como completada');
+    }
+  
+    etapa.is_completed = true;
+    return await this.etapaRepository.save(etapa);
   }
   
   async commitOng(etapaId: number, ongId: number): Promise<Etapa> {
