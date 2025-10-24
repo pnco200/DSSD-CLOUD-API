@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Proyecto } from './proyecto.entity';
@@ -17,7 +17,13 @@ export class ProyectoService {
   ) {}
 
   async create(createProyectoDto: CreateProyectoDto): Promise<Proyecto> {
+    if (createProyectoDto.ong_lider_id === null || createProyectoDto.ong_lider_id === undefined) {
+      throw new BadRequestException('El campo ong_lider_id es requerido');
+    }
     const ong_lider = await this.ongRepository.findOne({ where: { id: createProyectoDto.ong_lider_id } });
+    if (!ong_lider) {
+      throw new NotFoundException(`ONG con id ${createProyectoDto.ong_lider_id} no encontrada`);
+    }
     const proyecto = this.proyectoRepository.create({
       ...createProyectoDto,
       ong_lider,

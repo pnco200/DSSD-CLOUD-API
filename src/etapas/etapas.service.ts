@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Etapa } from './etapa.entity';
@@ -20,7 +20,13 @@ export class EtapasService {
 
   
   async create(createEtapaDto: CreateEtapaDto): Promise<Etapa> {
+    if (createEtapaDto.proyecto_id === null || createEtapaDto.proyecto_id === undefined) {
+      throw new BadRequestException('El campo proyecto_id es requerido');
+    }
     const proyecto = await this.proyectoRepository.findOne({ where: { id: createEtapaDto.proyecto_id } });
+    if (!proyecto) {
+      throw new NotFoundException(`Proyecto con id ${createEtapaDto.proyecto_id} no encontrado`);
+    }
     //const ong_ejecutora = await this.ongRepository.findOne({ where: { id: createEtapaDto.ong_ejecutora_id } });
     const etapa = this.etapaRepository.create({
       ...createEtapaDto,
