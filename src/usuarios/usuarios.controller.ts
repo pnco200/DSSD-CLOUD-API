@@ -19,7 +19,7 @@ export class UsuariosController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('JWT-auth')
   @Get()
   @ApiOperation({ summary: 'Obtener todos los usuarios' })
   @ApiResponse({ status: 200, description: 'Lista de todos los usuarios obtenida exitosamente.', type: [Usuario] })

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsBoolean } from 'class-validator';
 
 export class CreateUsuarioDto {
   @ApiProperty({ description: 'Nombre de usuario', example: 'john_doe' })
@@ -12,14 +12,20 @@ export class CreateUsuarioDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({
-    description: 'Rol del usuario',
-    example: 'user',
-    required: false,
-  })
+  @ApiProperty({ description: 'Email del usuario', example: 'john@example.com' })
   @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({ 
+    description: 'Indica si el usuario es gerente', 
+    example: false,
+    required: false,
+    default: false
+  })
+  @IsBoolean()
   @IsOptional()
-  rol: string;
+  es_gerente: boolean;
 
   @ApiProperty({ description: 'ID de la ONG a la que pertenece el usuario', example: 1 })
   @IsNumber()

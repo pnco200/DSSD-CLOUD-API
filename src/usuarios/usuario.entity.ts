@@ -12,8 +12,11 @@ export class Usuario {
   @Column()
   password: string;
 
-  @Column({ default: 'user' })
-  rol: string;
+  @Column()
+  email: string;
+
+  @Column({ default: false }) // Valor por defecto: false
+  es_gerente: boolean;
 
   @ManyToOne(() => Ong, { eager: true })
   @JoinColumn({ name: 'ong_id' })

@@ -21,7 +21,7 @@ export class AuthService {
     const payload = {
       sub: user.id,
       username: user.username,
-      rol: user.rol,
+      es_gerente: user.es_gerente,
       ong_nombre: user.ong.nombre,
       ong_id: user.ong.id,
     };
