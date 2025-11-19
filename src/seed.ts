@@ -6,6 +6,7 @@ import { Etapa } from './etapas/etapa.entity';
 import { Ong } from './ongs/ong.entity';
 import { Proyecto } from './proyectos/proyecto.entity';
 import * as dotenv from 'dotenv';
+import { Observacion } from './observaciones/observacion.entity';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASS || 'postgres',
   database: process.env.DB_NAME || 'postgres',
-  entities: [Usuario, Etapa, Ong, Proyecto],
+  entities: [Usuario,Observacion, Etapa, Ong, Proyecto],
   synchronize: true, // Set to true to auto-create tables
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
@@ -46,7 +47,7 @@ async function seed() {
   }));
 
   // Seed Usuarios
-  const passwordHash = await bcrypt.hash('password123', 10);
+  let passwordHash = await bcrypt.hash('password123', 10);
   
   // Usuarios para ONG Líder
   const laura = await usuarioRepo.save(usuarioRepo.create({ 
@@ -57,6 +58,8 @@ async function seed() {
     es_gerente: true 
   }));
 
+  passwordHash = await bcrypt.hash('password456', 10);
+
   const pedro = await usuarioRepo.save(usuarioRepo.create({ 
     username: 'pedro.rodriguez', 
     password: passwordHash, 
@@ -65,6 +68,7 @@ async function seed() {
     es_gerente: false 
   }));
 
+  passwordHash = await bcrypt.hash('password345', 10);
   const roberto = await usuarioRepo.save(usuarioRepo.create({ 
     username: 'roberto.silva', 
     password: passwordHash, 
@@ -73,6 +77,7 @@ async function seed() {
     es_gerente: true 
   }));
 
+  passwordHash = await bcrypt.hash('password789', 10);
   // Usuarios para ONG Colaboradora
   const carlos = await usuarioRepo.save(usuarioRepo.create({ 
     username: 'carlos.mendoza', 
@@ -82,6 +87,7 @@ async function seed() {
     es_gerente: true 
   }));
 
+   passwordHash = await bcrypt.hash('password012', 10);
   const sofia = await usuarioRepo.save(usuarioRepo.create({ 
     username: 'sofia.gutierrez', 
     password: passwordHash, 

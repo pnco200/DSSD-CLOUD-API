@@ -6,6 +6,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { EtapasModule } from './etapas/etapas.module';
 import { OngModule } from './ongs/ong.module';
 import { ProyectoModule } from './proyectos/proyecto.module';
+import { ObservacionModule } from './observaciones/observacion.module';
+
 
 @Module({
   imports: [
@@ -30,7 +32,8 @@ import { ProyectoModule } from './proyectos/proyecto.module';
     UsuariosModule,
     EtapasModule,
     OngModule,
-    ProyectoModule
+    ProyectoModule,
+    ObservacionModule
   ],
 })
 export class AppModule {}
