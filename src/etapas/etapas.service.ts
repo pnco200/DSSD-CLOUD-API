@@ -54,6 +54,17 @@ export class EtapasService {
     return this.findOne(id);
   }
 
+  async findByOngEjecutora(ongId: number): Promise<Etapa[]> {
+    if (!ongId) {
+      throw new BadRequestException('El usuario no tiene una ONG asociada');
+    }
+
+    return this.etapaRepository.find({
+      where: { ong_ejecutora: { id: ongId } },
+      relations: ['proyecto', 'ong_ejecutora'],
+    });
+  }
+
   async remove(id: number): Promise<void> {
     await this.etapaRepository.delete(id);
   }

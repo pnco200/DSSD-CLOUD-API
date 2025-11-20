@@ -27,14 +27,24 @@ export class EtapasController {
     return this.etapasService.findAll();
   }
 
-  @Get('available')
+
+  @Get('disponibles')
   @ApiOperation({ summary: 'Obtener etapas disponibles para colaborar (sin ONG ejecutora)' })
   @ApiResponse({ status: 200, description: 'Lista de etapas disponibles obtenida exitosamente.', type: [Etapa] })
   findAvailable() {
     return this.etapasService.findAvailableEtapas();
   }
 
-  
+
+  @Get('mis-etapas')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Obtener las etapas donde la ONG del usuario es la ejecutora' })
+  @ApiResponse({ status: 200, description: 'Lista de etapas asignadas a la ONG ejecutora del usuario.', type: [Etapa] })
+  findByExecutingOng(@Request() req) {
+    return this.etapasService.findByOngEjecutora(req.user.ong_id);
+  }
+
 
   @Get(':id')
   @ApiOperation({ summary: 'Obtener etapa por ID' })
