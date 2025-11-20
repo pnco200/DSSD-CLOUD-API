@@ -27,6 +27,15 @@ export class EtapasController {
     return this.etapasService.findAll();
   }
 
+  @Get('available')
+  @ApiOperation({ summary: 'Obtener etapas disponibles para colaborar (sin ONG ejecutora)' })
+  @ApiResponse({ status: 200, description: 'Lista de etapas disponibles obtenida exitosamente.', type: [Etapa] })
+  findAvailable() {
+    return this.etapasService.findAvailableEtapas();
+  }
+
+  
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener etapa por ID' })
   @ApiResponse({ status: 200, description: 'Etapa encontrada exitosamente.', type: Etapa })

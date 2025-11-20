@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, IsNull, Repository } from 'typeorm';
 import { Etapa } from './etapa.entity';
 import { CreateEtapaDto } from './dto/create-etapa.dto';
 import { UpdateEtapaDto } from './dto/update-etapa.dto';
@@ -109,6 +109,14 @@ async findObservacionesByEtapaId(etapaId: number): Promise<Observacion[]> {
     relations: ['observaciones', 'observaciones.usuario'] 
   });
   return etapa?.observaciones ?? [];
+}
+
+
+async findAvailableEtapas(): Promise<Etapa[]> {
+  return this.etapaRepository.find({
+    where: { ong_ejecutora: IsNull() },
+    relations: ['proyecto', 'ong_ejecutora'],
+  });
 }
 
 
