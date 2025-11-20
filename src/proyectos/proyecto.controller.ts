@@ -22,7 +22,7 @@ export class ProyectoController {
     return this.proyectoService.create(createProyectoDto, req.user.ong_id);
   }
 
-  @Post()
+  @Post("all")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Crear un nuevo proyecto' })
