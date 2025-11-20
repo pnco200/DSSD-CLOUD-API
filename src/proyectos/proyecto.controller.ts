@@ -18,6 +18,7 @@ export class ProyectoController {
   @ApiOperation({ summary: 'Crear un nuevo proyecto' })
   @ApiResponse({ status: 201, description: 'El proyecto ha sido creado exitosamente.', type: Proyecto })
   create(@Body() createProyectoDto: CreateProyectoDto, @Request() req) {
+    
     return this.proyectoService.create(createProyectoDto, req.user.ong_id);
   }
 

@@ -22,6 +22,7 @@ export class ProyectoService {
       throw new NotFoundException(`ONG con id ${ong_id} no encontrada`);
     }
     const proyecto = this.proyectoRepository.create({
+      id_externa: createProyectoDto.id_proyecto,
       ...createProyectoDto,
       ong_lider,
     } as DeepPartial<Proyecto>);

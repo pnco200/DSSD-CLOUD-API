@@ -15,7 +15,7 @@ export class CreateProyectoDto {
   })
   @IsString()
   @IsOptional()
-  id_externa: string;
+  id_proyecto: string;
 
   @ApiProperty({
     description: 'Nombre del proyecto',
