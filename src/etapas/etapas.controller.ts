@@ -27,6 +27,15 @@ export class EtapasController {
     return this.etapasService.findAll();
   }
 
+  @Get('mis-etapas')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Obtener las etapas donde la ONG del usuario es la ejecutora' })
+  @ApiResponse({ status: 200, description: 'Lista de etapas asignadas a la ONG ejecutora del usuario.', type: [Etapa] })
+  findByExecutingOng(@Request() req) {
+    return this.etapasService.findByOngEjecutora(req.user.ong_id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener etapa por ID' })
   @ApiResponse({ status: 200, description: 'Etapa encontrada exitosamente.', type: Etapa })
