@@ -6,6 +6,7 @@ import { CreateEtapaDto } from './dto/create-etapa.dto';
 import { UpdateEtapaDto } from './dto/update-etapa.dto';
 import { Proyecto } from '../proyectos/proyecto.entity';
 import { Ong } from '../ongs/ong.entity';
+import { Observacion } from 'src/observaciones/observacion.entity';
 
 @Injectable()
 export class EtapasService {
@@ -101,4 +102,16 @@ export class EtapasService {
     etapa.ong_ejecutora = ong;
     return this.etapaRepository.save(etapa);
   }
+
+async findObservacionesByEtapaId(etapaId: number): Promise<Observacion[]> {
+  const etapa = await this.etapaRepository.findOne({ 
+    where: { id: etapaId }, 
+    relations: ['observaciones', 'observaciones.usuario'] 
+  });
+  return etapa?.observaciones ?? [];
+}
+
+
+
+
 }

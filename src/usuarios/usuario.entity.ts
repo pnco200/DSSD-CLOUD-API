@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Ong } from '../ongs/ong.entity';
+import { Observacion } from 'src/observaciones/observacion.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -21,4 +22,7 @@ export class Usuario {
   @ManyToOne(() => Ong, { eager: true })
   @JoinColumn({ name: 'ong_id' })
   ong: Ong;
+
+  @OneToMany(() => Observacion, observacion => observacion.usuario)
+  observaciones: Observacion[];
 }

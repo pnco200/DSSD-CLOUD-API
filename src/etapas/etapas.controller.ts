@@ -66,4 +66,13 @@ export class EtapasController {
   remove(@Param('id') id: string) {
     return this.etapasService.remove(+id);
   }
+
+  @Get(':id/observaciones')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Obtener todas las observaciones de una etapa' })
+  @ApiResponse({ status: 200, description: 'Lista de observaciones de la etapa obtenida exitosamente.' })
+  findObservaciones(@Param('id') id: string) {
+    return this.etapasService.findObservacionesByEtapaId(+id);
+  }
 }

@@ -1,4 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { OneToMany } from 'typeorm';
+import { Observacion } from '../observaciones/observacion.entity';
 import { Proyecto } from '../proyectos/proyecto.entity';
 import { Ong } from '../ongs/ong.entity';
 
@@ -24,4 +26,7 @@ export class Etapa {
 
   @ManyToOne(() => Proyecto, proyecto => proyecto.etapas)
   proyecto: Proyecto;
+  
+  @OneToMany(() => Observacion, observacion => observacion.etapa)
+  observaciones: Observacion[];
 }
