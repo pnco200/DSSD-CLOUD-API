@@ -5,6 +5,7 @@ import { UpdateEtapaDto } from './dto/update-etapa.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Etapa } from './etapa.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CommitEtapaDto } from './dto/commit-etapa.dto';
 
 @ApiTags('etapas')
 @Controller('etapas')
@@ -76,8 +77,8 @@ export class EtapasController {
   @Patch(':id/comprometer')
   @ApiOperation({ summary: 'Comprometer una ONG para ejecutar la etapa' })
   @ApiResponse({ status: 200, description: 'La ONG fue comprometida a la etapa exitosamente.', type: Etapa })
-  commitOng(@Param('id') id: string, @Request() req) {
-    return this.etapasService.commitOng(+id, req.user.ong_id);
+  commitOng(@Param('id') id: string, @Body() commitEtapaDto: CommitEtapaDto ,@Request() req) {
+    return this.etapasService.commitOng(+id, commitEtapaDto.ong_id);
   }
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar etapa' })
