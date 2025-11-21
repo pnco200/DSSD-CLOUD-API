@@ -76,8 +76,7 @@ export class ProyectoService {
 
   findOne(id: number): Promise<Proyecto | null> {
     return this.proyectoRepository.findOne({
-      where: { id },
-      relations: ['ong_lider', 'etapas'],
+      where: { id }
     });
   }
 
