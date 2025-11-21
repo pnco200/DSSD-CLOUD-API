@@ -32,6 +32,15 @@ export class ProyectoController {
     return this.proyectoService.createAll(createProyectoDto, req.user.ong_id);
   }
 
+  @Post(":idProyecto/complete")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Crear un nuevo proyecto' })
+  @ApiResponse({ status: 201, description: 'El proyecto ha sido creado exitosamente.', type: Proyecto })
+  complete(@Param('idProyecto') idProyecto: string) {
+    return this.proyectoService.updateCompletado(Number(idProyecto));
+  }
+
   @Get()
   @ApiOperation({ summary: 'Obtener todos los proyectos' })
   @ApiResponse({ status: 200, description: 'Lista de todos los proyectos obtenida exitosamente.', type: [Proyecto] })

@@ -81,6 +81,14 @@ export class ProyectoService {
     });
   }
 
+  async updateCompletado(id: number): Promise<Proyecto | null> {
+    const proyecto = await this.findOne(id)
+    if(!proyecto) return null;
+    proyecto.en_ejecucion = true;
+    await this.proyectoRepository.update(id, proyecto);
+    return proyecto
+  }
+
   async update(id: number, updateProyectoDto: UpdateProyectoDto): Promise<Proyecto | null> {
     await this.proyectoRepository.update(id, updateProyectoDto);
     return this.findOne(id);
