@@ -25,6 +25,14 @@ export class ObservacionController {
     return this.observacionService.create(etapaId,dto,req.user);
   }
 
+  @Post(':etapaId/notificar-gerente')
+  @ApiOperation({ summary: 'Notificar por email al primer gerente de la ONG de la etapa' })
+  @ApiResponse({ status: 201, description: 'Correo enviado al gerente' })
+  @ApiResponse({ status: 404, description: 'Etapa o gerente no encontrado' })
+  notificarGerente(@Param('etapaId') etapaId: number) {
+    return this.observacionService.notificarGerente(etapaId);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Obtener todas las observaciones' })
   @ApiResponse({ status: 200, description: 'Lista de observaciones', type: [Observacion] })

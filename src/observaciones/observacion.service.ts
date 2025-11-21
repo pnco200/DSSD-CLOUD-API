@@ -6,6 +6,7 @@ import { CreateObservacionDto } from './dto/create-observacion.dto';
 import { UpdateObservacionDto } from './dto/update-observacion.dto';
 import { Etapa } from '../etapas/etapa.entity';
 import { Usuario } from '../usuarios/usuario.entity';
+import { MailService } from 'src/common/mail/mail.service';
 
 @Injectable()
 export class ObservacionService {
@@ -16,6 +17,7 @@ export class ObservacionService {
     private readonly etapaRepo: Repository<Etapa>,
     @InjectRepository(Usuario)
     private readonly usuarioRepo: Repository<Usuario>,
+    private readonly mailService: MailService,
   ) {}
 
   async create(etapaId, dto: CreateObservacionDto, user: any): Promise<Observacion> {
@@ -69,4 +71,43 @@ export class ObservacionService {
     obs.respondida = true;  
     return await this.observacionRepo.save(obs);
     }
+
+  async notificarGerente(etapaId: number) {
+    const etapaIdNumber = Number(etapaId);
+    if (Number.isNaN(etapaIdNumber)) {
+      throw new BadRequestException('Identificador de etapa invalido');
+    }
+
+    const etapa = await this.etapaRepo.findOne({
+      where: { id: etapaIdNumber },
+      relations: ['ong_ejecutora', 'proyecto'],
+    });
+
+    if (!etapa) throw new NotFoundException('Etapa no encontrada');
+
+    const gerente = await this.usuarioRepo.findOne({
+      where: {
+        ong: { id: etapa.ong_ejecutora.id },
+        es_gerente: true,
+      },
+      order: { id: 'ASC' },
+    });
+
+    if (!gerente) {
+      throw new NotFoundException('No se encontro un gerente para la ONG asociada');
+    }
+
+    const mensaje = `Recibio una observacion para la etapa ${etapa.nombre} del proyecto ${etapa.proyecto?.nombre || 'sin nombre'}`;
+
+    await this.mailService.send({
+      to: gerente.email,
+      subject: `Observacion para la etapa ${etapa.nombre}`,
+      text: mensaje,
+    });
+
+    return {
+      message: 'Correo enviado al gerente',
+      destinatario: gerente.email,
+    };
+  }
 }
