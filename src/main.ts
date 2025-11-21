@@ -9,6 +9,8 @@ async function bootstrap() {
   app.enableCors();
 
   // 🔹 Configurar Swagger
+  const swaggerPath = 'api-docs';
+  const swaggerJsonPath = `${swaggerPath}-json`;
   const config = new DocumentBuilder()
     .setTitle('API de Colaboraciones')
     .setDescription('Documentación de la API para proyectos y etapas')
@@ -20,7 +22,11 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup(swaggerPath, app, document, {
+    explorer: true, // habilita el form de exploración y el botón de descarga (JSON)
+    swaggerUrl: `/${swaggerJsonPath}`,
+    jsonDocumentUrl: swaggerJsonPath,
+  });
 
   // 🔹 Render asigna automáticamente un puerto dinámico (PORT)
   const port = process.env.PORT || 3000;
