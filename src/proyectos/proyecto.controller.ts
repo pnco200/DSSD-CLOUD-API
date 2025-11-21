@@ -25,7 +25,7 @@ export class ProyectoController {
   @Post("all")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Crear un nuevo proyecto' })
+  @ApiOperation({ summary: 'Crear un nuevo proyecto y sus etapas' })
   @ApiResponse({ status: 201, description: 'El proyecto ha sido creado exitosamente.', type: Proyecto })
   createAll(@Body() createProyectoDto: any, @Request() req) {
     
@@ -35,8 +35,8 @@ export class ProyectoController {
   @Post(":idProyecto/complete")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Crear un nuevo proyecto' })
-  @ApiResponse({ status: 201, description: 'El proyecto ha sido creado exitosamente.', type: Proyecto })
+  @ApiOperation({ summary: 'Marca al proyecto como completado (todas las etapas asignadas)' })
+  @ApiResponse({ status: 201, description: 'El proyecto se marco como completado', type: Proyecto })
   complete(@Param('idProyecto') idProyecto: string) {
     return this.proyectoService.updateCompletado(Number(idProyecto));
   }
